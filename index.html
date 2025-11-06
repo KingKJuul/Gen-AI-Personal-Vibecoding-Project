@@ -27,6 +27,13 @@
 </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
+    <!-- Load Babel Standalone to transpile TSX in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!--
+      The script type is changed to "text/babel" and "data-type" is set to "module".
+      This tells Babel to transpile the TSX file and to treat it as an ES module,
+      allowing the use of 'import' and 'export' syntax.
+    -->
+    <script type="text/babel" data-type="module" src="./index.tsx"></script>
   </body>
 </html>
