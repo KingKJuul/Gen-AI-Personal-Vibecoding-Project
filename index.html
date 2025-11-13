@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/butter-logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Butter AI - See Customer Churn Before It Happens</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,23 +17,18 @@
   <script type="importmap">
 {
   "imports": {
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0",
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.0"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.1"
   }
 }
 </script>
 </head>
   <body>
     <div id="root"></div>
-    <!-- Load Babel Standalone to transpile TSX in the browser -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!--
-      The script type is changed to "text/babel" and "data-type" is set to "module".
-      This tells Babel to transpile the TSX file and to treat it as an ES module,
-      allowing the use of 'import' and 'export' syntax.
-    -->
-    <script type="text/babel" data-type="module" src="./index.tsx"></script>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>

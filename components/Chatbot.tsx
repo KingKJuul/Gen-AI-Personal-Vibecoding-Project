@@ -1,6 +1,13 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { askButterBot } from '../services/geminiService';
 import { ChatMessage, MessageAuthor } from '../types';
+
+const starterPrompts = [
+  "What is Butter AI?",
+  "How does health scoring work?",
+  "Tell me about automated alerts.",
+];
 
 // Chat bubble component
 // FIX: Explicitly type ChatBubble as a React.FC to correctly handle the special 'key' prop.
@@ -41,17 +48,16 @@ const Chatbot: React.FC = () => {
     }
   }, [messages]);
 
-  const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!userInput.trim() || isLoading) return;
+  const sendMessage = async (messageText: string) => {
+    if (!messageText.trim() || isLoading) return;
 
-    const userMessage: ChatMessage = { author: MessageAuthor.USER, text: userInput.trim() };
+    const userMessage: ChatMessage = { author: MessageAuthor.USER, text: messageText.trim() };
     setMessages((prev) => [...prev, userMessage]);
     setUserInput('');
     setIsLoading(true);
 
     try {
-      const botResponseText = await askButterBot(userInput.trim());
+      const botResponseText = await askButterBot(messageText.trim());
       const botMessage: ChatMessage = { author: MessageAuthor.BOT, text: botResponseText };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
@@ -63,6 +69,11 @@ const Chatbot: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendMessage(userInput);
   };
   
   return (
@@ -88,6 +99,23 @@ const Chatbot: React.FC = () => {
           {messages.map((msg, index) => (
             <ChatBubble key={index} message={msg} />
           ))}
+          
+          {/* Starter Prompts */}
+          {messages.length === 1 && !isLoading && (
+            <div className="mt-4 flex flex-col items-start space-y-2 animate-fade-in">
+              <p className="text-xs text-slate-500 mb-1">Or try one of these:</p>
+              {starterPrompts.map((prompt, i) => (
+                  <button 
+                      key={i} 
+                      onClick={() => sendMessage(prompt)}
+                      className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-full text-sm hover:bg-slate-200 transition-colors"
+                  >
+                      {prompt}
+                  </button>
+              ))}
+            </div>
+          )}
+
           {isLoading && (
             <div className="flex justify-start mb-4">
               <div className="px-4 py-3 rounded-2xl bg-slate-200 text-slate-800 rounded-bl-none">
@@ -103,7 +131,7 @@ const Chatbot: React.FC = () => {
 
         {/* Input */}
         <div className="flex-shrink-0 p-4 border-t border-slate-200">
-          <form onSubmit={handleSendMessage} className="flex space-x-2">
+          <form onSubmit={handleFormSubmit} className="flex space-x-2">
             <input
               type="text"
               value={userInput}
@@ -114,7 +142,7 @@ const Chatbot: React.FC = () => {
             />
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !userInput.trim()}
               className="bg-slate-800 text-white px-4 py-2 rounded-lg hover:bg-slate-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
